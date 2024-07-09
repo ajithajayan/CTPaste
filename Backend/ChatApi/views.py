@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from .models import RoomCode, Device
+from django.contrib.auth import authenticate
 import random
 
 
@@ -40,14 +41,20 @@ class CreateGetDevice(APIView):
         if device_name is None:
             return Response({'errors': 'Device name is required'}, status=status.HTTP_400_BAD_REQUEST)
         try:
-            room_obj = RoomCode.objects.create(CT_code=int(ct_code))
+            room_obj = RoomCode.objects.create_user(CT_code=int(ct_code))
         except ValidationError:
             return Response({'errors': 'CT Code already exist'}, status=status.HTTP_409_CONFLICT)
         device_obj, device_created = Device.objects.get_or_create(
-            name=device_name, room=room_obj.id)
+            name=device_name, room=room_obj)
         response_status = status.HTTP_201_CREATED if device_created else status.HTTP_200_OK
         context = {
             'device_id': device_obj.id,
             'device_create_status': device_created
         }
         return Response(context, status=response_status)
+
+
+class test_purpose(APIView):
+    def get(self, request):
+        user = authenticate(username=1414, password='1414')
+        return Response({'user': user.id, 'kk': user.CT_code}, status=status.HTTP_200_OK)

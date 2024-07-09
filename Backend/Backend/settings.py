@@ -36,10 +36,14 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+
+    'daphne',
+
     "django.contrib.staticfiles",
 
     'ChatApi',
     'rest_framework',
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -71,6 +75,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "Backend.wsgi.application"
+
+ASGI_APPLICATION = 'Backend.asgi.application'
+
+AUTH_USER_MODEL = "ChatApi.RoomCode"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 
 # Database
