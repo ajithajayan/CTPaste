@@ -18,6 +18,21 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+
+    def create_or_get(self, CT_code):
+        if not CT_code:
+            raise ValueError("User must have an CT_code")
+        if RoomCode.objects.filter(CT_code=CT_code).exists():
+            return RoomCode.objects.filter(CT_code=CT_code)[0]
+        user = self.model(
+            CT_code=CT_code
+        )
+
+        user.is_active = True
+        user.set_password(str(CT_code))
+        user.save(using=self._db)
+        return user
+
     def create_superuser(self, CT_code, password):
         user = self.create_user(
             CT_code=CT_code,
@@ -48,7 +63,7 @@ class Device(models.Model):
     is_active = models.BooleanField(default=True)  # Soft delete field
 
     class Meta:
-        unique_together = ('name', 'room',)
+        unique_together = ('name', 'room')
         indexes = [
             models.Index(fields=['created_time']),
         ]
