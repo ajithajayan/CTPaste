@@ -79,7 +79,7 @@ TEMPLATES = [
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-WSGI_APPLICATION = "Backend.wsgi.application"
+# WSGI_APPLICATION = "Backend.wsgi.application"
 
 ASGI_APPLICATION = 'Backend.asgi.application'
 
