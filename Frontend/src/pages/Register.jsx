@@ -16,35 +16,39 @@ function Register() {
         })
     }
     const validate = () => {
-        const newErrors = {};
-        if (Code.trim() === '') {
-            newErrors.Code = 'Code cannot be empty';
-        } else if (Code.length !== 4) {
-            newErrors.Code = 'Code must be exactly 4 characters long';
+        if (Code === '') {
+            alert('Code cannot be empty');
+            return false
+        } else if (Code.toString().length !== 4) {
+            alert('Code must be exactly 4 characters long'+ Code.length);
+            return false
         }
 
         if (DeviceName.trim().length < 3) {
-            newErrors.DeviceName = 'Device name must be at least 3 characters long';
+            alert('Device name must be at least 3 characters long');
+            return false
         }
-
-        return newErrors;
+        return true
     };
 
 
     const CreateRoom = async() =>{
+        if (!validate())
+            return
         const FormData = {'ct_code':Code, 'device_name':DeviceName}
-        await axios.post('http://localhost:8000/v1/rooms/join/', FormData).then((res)=>{
+        await axios.post('http://localhost:8000/v1/rooms/create/', FormData).then((res)=>{
             RedirectHome(res.data)
         }).catch((err)=>{
-            alert('')
+            alert(err)
             console.log(err);
         })
     }
     const JoinRoom = async() =>{
         const FormData = {'ct_code':Code, 'device_name':DeviceName}
-        await axios.post('http://localhost:8000/v1/rooms/create/', FormData).then((res)=>{
+        await axios.post('http://localhost:8000/v1/rooms/join/', FormData).then((res)=>{
             RedirectHome(res.data)
         }).catch((err)=>{
+            alert(err.response.data.errors)
             console.log(err);
         })
     }
@@ -80,7 +84,7 @@ function Register() {
                             {!Session ?
                                 <div className='absolute top-2 right-2 cursor-pointer' onClick={()=>{generate_code()}}>
                                     <svg width="23px" height="23px" viewBox="0 0 24 24" fill="none" >
-                                        <path d="M11 2L13 3.99545L12.9408 4.05474M13 18.0001L11 19.9108L11.0297 19.9417M12.9408 4.05474L11 6M12.9408 4.05474C12.6323 4.01859 12.3183 4 12 4C7.58172 4 4 7.58172 4 12C4 14.5264 5.17107 16.7793 7 18.2454M17 5.75463C18.8289 7.22075 20 9.47362 20 12C20 16.4183 16.4183 20 12 20C11.6716 20 11.3477 19.9802 11.0297 19.9417M13 22.0001L11.0297 19.9417" stroke="#000000" strokeWidth="2" stroke-linecap="round" strokeLinejoin="round" />
+                                        <path d="M11 2L13 3.99545L12.9408 4.05474M13 18.0001L11 19.9108L11.0297 19.9417M12.9408 4.05474L11 6M12.9408 4.05474C12.6323 4.01859 12.3183 4 12 4C7.58172 4 4 7.58172 4 12C4 14.5264 5.17107 16.7793 7 18.2454M17 5.75463C18.8289 7.22075 20 9.47362 20 12C20 16.4183 16.4183 20 12 20C11.6716 20 11.3477 19.9802 11.0297 19.9417M13 22.0001L11.0297 19.9417" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
                                 </div>
                                 :
@@ -96,7 +100,7 @@ function Register() {
                             <p className="text-gray-600 text-sm">{Session ? "Need a new room/code" : "You already have a code"}</p>
                             <p className="text-blue-400 text-sm underline cursor-pointer" onClick={async() => {setSession((res) => !res); {Session? generate_code(): setCode('')}}}>{Session ? "Create" : 'Join In'}</p>
                         </div>
-                        <button onClick={()=>{Session? CreateRoom(): JoinRoom()}} type='button' className="mt-5 bg-transparent relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-cyan-400 to-blue-400 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200">
+                        <button onClick={()=>{!Session? CreateRoom(): JoinRoom()}} type='button' className="mt-5 bg-transparent relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-cyan-400 to-blue-400 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200">
                             <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-cyan-50 rounded-md group-hover:bg-opacity-0">
                                 Get in
                             </span>
