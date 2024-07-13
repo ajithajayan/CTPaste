@@ -36,12 +36,22 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+
+    'daphne',
+    "corsheaders",
+
     "django.contrib.staticfiles",
+
+    'rest_framework_simplejwt',
+    'ChatApi',
+    'rest_framework',
+    'channels'
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -67,7 +77,26 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "Backend.wsgi.application"
+CORS_ALLOW_ALL_ORIGINS = True
+
+# WSGI_APPLICATION = "Backend.wsgi.application"
+
+ASGI_APPLICATION = 'Backend.asgi.application'
+
+AUTH_USER_MODEL = "ChatApi.RoomCode"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
 
 
 # Database
@@ -105,7 +134,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Kolkata"
 
 USE_I18N = True
 
