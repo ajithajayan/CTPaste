@@ -13,14 +13,15 @@ const Header = () => {
     }
 
     useEffect(() => {
-        setCT_code(jwtDecode(localStorage.getItem('access')))
+        if(localStorage.getItem('access'))
+            setCT_code(jwtDecode(localStorage.getItem('access')))
     }, [])
     return (
         <header className='flex shadow-md py-4 px-4 sm:px-10 bg-white font-[sans-serif] min-h-[70px] tracking-wide relative z-50'>
-            <div className='flex flex-wrap items-center justify-between gap-5 w-full'>
+            <div className='flex flex-wrap items-center justify-between gap-1 w-full'>
                 <p className='text-2xl'><span className='font-bold'>CTP</span>aste</p>
 
-                <div className='flex max-lg:ml-auto space-x-3'>
+                <div className='flex max-lg:ml-auto space-x-3 justify-end'>
                     <button
                         className='px-2 py-2 text-sm rounded-full font-bold'>CT Code: {CT_code?.ct_code}</button>
 
